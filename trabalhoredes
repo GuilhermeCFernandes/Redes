@@ -12,3 +12,7 @@ Sensores virtuais:
 	Pais sobrevoado (rand de uma letra)
 	Tempo esperado para aterrissagem (x - tempo de voo)
 	Combustivel restante (combustivel inicial - (peso inicial - peso atual))
+
+O que falta ser feito:
+	Fazer as funcoes dos sensores fisicos  no client, usar o time.h pra isso.
+	Fazer as funcoes dos sensores virtuais no server.
