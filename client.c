@@ -8,13 +8,20 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
-#define ALTITUDE    "cmd alt"
-#define LONGITUDE   "cmd long"
-#define LATITUDE    "cmd lat"
-#define VELOCIDADE  "cmd vel"
-#define ORIENTACAO  "cmd ori"
-#define TEMPO_VOO   "cmd time"
-#define PESO        "cmd peso"
+#define CMD_ALTITUDE    "cmd alt"
+#define CMD_LONGITUDE   "cmd long"
+#define CMD_LATITUDE    "cmd lat"
+#define CMD_VELOCIDADE  "cmd vel"
+#define CMD_ORIENTACAO  "cmd ori"
+#define CMD_TEMPO_VOO   "cmd time"
+#define CMD_PESO        "cmd peso"
+
+double fAltitude(double t);
+double fLongitude(double t);
+double fLatitude(double t);
+double fVelocidade(double t);
+void   fOrientacao(double* x, double* y, double* z, double t);
+double fPeso(double t);
 
 void error(const char *msg){
     perror(msg);
@@ -22,6 +29,8 @@ void error(const char *msg){
 }
 
 int main(int argc, char *argv[]){
+    srand(time(NULL));
+
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
@@ -49,14 +58,36 @@ int main(int argc, char *argv[]){
     if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) error("ERROR connecting");
     //conectado
 
+    clock_t beginning = clock();
+
 	while(1){
         //recebendo o comando
         bzero(msg,256);
         n = read(sockfd,msg,255);
         if (n < 0) error("ERROR reading from socket");
 
-        //TODO decidir a resposta
-        bzero(msg,256);
+        if(strcmp(CMD_ALTITUDE, msg) == 0){
+            bzero(msg,256);
+            sscanf(msg, "%lf", fAltitude((clock()-beginning)/CLOCKS_PER_SEC));
+        }
+        else if(strcmp(CMD_LONGITUDE, msg) == 0){
+
+        }
+        else if(strcmp(CMD_LATITUDE, msg) == 0){
+
+        }
+        else if(strcmp(CMD_VELOCIDADE, msg) == 0){
+
+        }
+        else if(strcmp(CMD_ORIENTACAO, msg) == 0){
+
+        }
+        else if(strcmp(CMD_TEMPO_VOO, msg) == 0){
+
+        }
+        else if(strcmp(CMD_PESO, msg) == 0){
+
+        }
 
         //enviar a resposta
         n = write(sockfd,msg,strlen(msg));
@@ -66,3 +97,10 @@ int main(int argc, char *argv[]){
     close(sockfd);
     return 0;
 }
+
+double fAltitude(double t){
+    if(t < 4*7200) return t; //da pra mudar pra uma parabola e tals, mas whatever
+    else if(t < 8*7200) return 11000;
+    else return (t < 11000 ? 11000-t : 0);
+}
+

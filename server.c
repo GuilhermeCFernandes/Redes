@@ -9,22 +9,23 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#define ALTITUDE    "cmd alt"
-#define LONGITUDE   "cmd long"
-#define LATITUDE    "cmd lat"
-#define VELOCIDADE  "cmd vel"
-#define ORIENTACAO  "cmd ori"
-#define TEMPO_VOO   "cmd time"
-#define PESO        "cmd peso"
+#define CMD_ALTITUDE    "cmd alt"
+#define CMD_LONGITUDE   "cmd long"
+#define CMD_LATITUDE    "cmd lat"
+#define CMD_VELOCIDADE  "cmd vel"
+#define CMD_ORIENTACAO  "cmd ori"
+#define CMD_TEMPO_VOO   "cmd time"
+#define CMD_PESO        "cmd peso"
+#define CMD_DIST        "cmd dist"
 
-void error(const char *msg)
-{
+void error(const char *msg){
     perror(msg);
     exit(1);
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
+    srand(time(NULL));
+
     int sockfd, newsockfd, portno;
     socklen_t clilen;
     char msg[256];
@@ -66,6 +67,7 @@ int main(int argc, char *argv[])
 		if (n < 0) error("ERROR reading from socket");
 
 		//TODO fazer as operacoes de sensores virtuais
+		printf("%s\n", msg);
     }
      close(newsockfd);
      close(sockfd);
