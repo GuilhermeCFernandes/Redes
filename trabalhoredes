@@ -1,0 +1,14 @@
+Sensores fisicos:
+	Altitude
+	Longitude
+	Latitude
+	Velocidade
+	Orientacao
+	Tempo de voo
+	Peso
+	
+Sensores virtuais:
+	Distancia da nave mais proxima (so um rand mesmo)
+	Pais sobrevoado (rand de uma letra)
+	Tempo esperado para aterrissagem (x - tempo de voo)
+	Combustivel restante (combustivel inicial - (peso inicial - peso atual))
