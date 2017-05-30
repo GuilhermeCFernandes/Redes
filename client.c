@@ -9,12 +9,12 @@
 #include <netdb.h>
 
 #define CMD_ALTITUDE    "cmd alt\n"
-#define CMD_LONGITUDE   "cmd long"
-#define CMD_LATITUDE    "cmd lat"
-#define CMD_VELOCIDADE  "cmd vel"
-#define CMD_ORIENTACAO  "cmd ori"
-#define CMD_TEMPO_VOO   "cmd time"
-#define CMD_PESO        "cmd peso"
+#define CMD_LONGITUDE   "cmd long\n"
+#define CMD_LATITUDE    "cmd lat\n"
+#define CMD_VELOCIDADE  "cmd vel\n"
+#define CMD_ORIENTACAO  "cmd ori\n"
+#define CMD_TEMPO_VOO   "cmd time\n"
+#define CMD_PESO        "cmd peso\n"
 
 #define MSG_SIZE 256
 double fAltitude(double t);
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
     struct sockaddr_in serv_addr;
     struct hostent *server;
 
-    char msg[256];
+    char msg[MSG_SIZE];
     if (argc < 3){
         fprintf(stderr,"usage %s hostname port\n", argv[0]);
         exit(0);
@@ -63,15 +63,14 @@ int main(int argc, char *argv[]){
 
 	while(1){
         //recebendo o comando
-        bzero(msg,256);
+        bzero(msg,MSG_SIZE);
         n = read(sockfd,msg,255);
         if (n < 0) error("ERROR reading from socket");
 
-	printf("%d\n",strcmp(CMD_ALTITUDE, msg));
-	printf("1%s1\n", msg);
-        if(strcmp(CMD_ALTITUDE, msg) == 0){
-            bzero(msg,256);
-	 	snprintf(msg, MSG_SIZE, "%lf", fAltitude((clock()-beginning)/CLOCKS_PER_SEC));	
+        if(strcmp(msg, "exit\n") == 0) break;
+        else if(strcmp(CMD_ALTITUDE, msg) == 0){
+            bzero(msg,MSG_SIZE);
+            snprintf(msg, MSG_SIZE, "%lf", fAltitude((double)(clock()-beginning)/CLOCKS_PER_SEC));
         }
         else if(strcmp(CMD_LONGITUDE, msg) == 0){
 
@@ -104,6 +103,6 @@ int main(int argc, char *argv[]){
 double fAltitude(double t){
     if(t < 4*7200) return t; //da pra mudar pra uma parabola e tals, mas whatever
     else if(t < 8*7200) return 11000;
-    else return (t < 11000 ? 11000-t : 0);
+    else return (t < 11000 ? 11000+8*7200-t : 0);
 }
 

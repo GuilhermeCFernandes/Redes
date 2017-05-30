@@ -9,14 +9,16 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#define CMD_ALTITUDE    "cmd alt"
-#define CMD_LONGITUDE   "cmd long"
-#define CMD_LATITUDE    "cmd lat"
-#define CMD_VELOCIDADE  "cmd vel"
-#define CMD_ORIENTACAO  "cmd ori"
-#define CMD_TEMPO_VOO   "cmd time"
-#define CMD_PESO        "cmd peso"
-#define CMD_DIST        "cmd dist"
+#define CMD_ALTITUDE    "cmd alt\n"
+#define CMD_LONGITUDE   "cmd long\n"
+#define CMD_LATITUDE    "cmd lat\n"
+#define CMD_VELOCIDADE  "cmd vel\n"
+#define CMD_ORIENTACAO  "cmd ori\n"
+#define CMD_TEMPO_VOO   "cmd time\n"
+#define CMD_PESO        "cmd peso\n"
+#define CMD_DIST        "cmd dist\n"
+
+#define MSG_SIZE 256
 
 void error(const char *msg){
     perror(msg);
@@ -28,7 +30,7 @@ int main(int argc, char *argv[]){
 
     int sockfd, newsockfd, portno;
     socklen_t clilen;
-    char msg[256];
+    char msg[MSG_SIZE];
     struct sockaddr_in serv_addr, cli_addr;
     int n;
 
@@ -54,13 +56,14 @@ int main(int argc, char *argv[]){
 
     while(1){
         //lendo o comando
-        bzero(msg,256);
+        bzero(msg,MSG_SIZE);
         fgets(msg,255,stdin);
-        if(strcmp(msg, "exit") == 0) break;
 
         //enviando o comando
         n = write(newsockfd, msg, 255);
         if (n < 0) error("ERROR writing to socket");
+
+        if(strcmp(msg, "exit\n") == 0) break;
 
         //lendo a resposta
 		n = read(newsockfd,msg,255);
@@ -69,7 +72,8 @@ int main(int argc, char *argv[]){
 		//TODO fazer as operacoes de sensores virtuais
 		printf("%s\n", msg);
     }
-     close(newsockfd);
-     close(sockfd);
-     return 0;
+    close(newsockfd);
+    close(sockfd);
+    return 0;
 }
+
