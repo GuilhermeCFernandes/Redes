@@ -8,7 +8,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
-#define CMD_ALTITUDE    "cmd alt"
+#define CMD_ALTITUDE    "cmd alt\n"
 #define CMD_LONGITUDE   "cmd long"
 #define CMD_LATITUDE    "cmd lat"
 #define CMD_VELOCIDADE  "cmd vel"
@@ -16,6 +16,7 @@
 #define CMD_TEMPO_VOO   "cmd time"
 #define CMD_PESO        "cmd peso"
 
+#define MSG_SIZE 256
 double fAltitude(double t);
 double fLongitude(double t);
 double fLatitude(double t);
@@ -66,9 +67,11 @@ int main(int argc, char *argv[]){
         n = read(sockfd,msg,255);
         if (n < 0) error("ERROR reading from socket");
 
+	printf("%d\n",strcmp(CMD_ALTITUDE, msg));
+	printf("1%s1\n", msg);
         if(strcmp(CMD_ALTITUDE, msg) == 0){
             bzero(msg,256);
-            sscanf(msg, "%lf", fAltitude((clock()-beginning)/CLOCKS_PER_SEC));
+	 	snprintf(msg, MSG_SIZE, "%lf", fAltitude((clock()-beginning)/CLOCKS_PER_SEC));	
         }
         else if(strcmp(CMD_LONGITUDE, msg) == 0){
 
