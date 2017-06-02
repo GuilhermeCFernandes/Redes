@@ -55,17 +55,17 @@ int main(int argc, char *argv[]){
 	if (newsockfd < 0) error("ERROR on accept");
 
 	while(1){
-	//lendo o comando
-	bzero(msg,MSG_SIZE);
-	fgets(msg,255,stdin);
+		//lendo o comando
+		bzero(msg,MSG_SIZE);
+		fgets(msg,255,stdin);
 
-	//enviando o comando
-	n = write(newsockfd, msg, 255);
-	if (n < 0) error("ERROR writing to socket");
+		//enviando o comando
+		n = write(newsockfd, msg, 255);
+		if (n < 0) error("ERROR writing to socket");
 
-	if(strcmp(msg, "exit\n") == 0) break;
+		if(strcmp(msg, "exit\n") == 0) break;
 
-	//lendo a resposta
+		//lendo a resposta
 		n = read(newsockfd,msg,255);
 		if (n < 0) error("ERROR reading from socket");
 
