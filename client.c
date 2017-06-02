@@ -14,7 +14,7 @@
 #define CMD_LATITUDE	"cmd lat\n"
 #define CMD_VELOCIDADE  "cmd vel\n"
 #define CMD_ORIENTACAO  "cmd ori\n"
-#define CMD_TEMPO_VOO   "cmd time\n"
+#define CMD_TEMPO_VOO   "cmd tempo\n"
 #define CMD_PESO	"cmd peso\n"
 
 #define PI 3.14159265359
@@ -73,36 +73,38 @@ int main(int argc, char *argv[]){
 		if(strcmp(msg, "exit\n") == 0) break;
 		else if(strcmp(CMD_ALTITUDE, msg) == 0){
 			bzero(msg, MSG_SIZE);
-			snprintf(msg, MSG_SIZE, "%lf", fAltitude((double)(time(NULL)-beginning)));
+			snprintf(msg, MSG_SIZE, "%lf\n", fAltitude((double)(time(NULL)-beginning)));
 		}
 		else if(strcmp(CMD_LONGITUDE, msg) == 0){
 			bzero(msg, MSG_SIZE);
-			snprintf(msg, MSG_SIZE, "%lf", fLongitude((double)(time(NULL)-beginning)));
+			snprintf(msg, MSG_SIZE, "%lf\n", fLongitude((double)(time(NULL)-beginning)));
 		}
 		else if(strcmp(CMD_LATITUDE, msg) == 0){
 			bzero(msg, MSG_SIZE);
-			snprintf(msg, MSG_SIZE, "%lf", fLatitude((double)(time(NULL)-beginning)));
+			snprintf(msg, MSG_SIZE, "%lf\n", fLatitude((double)(time(NULL)-beginning)));
 		}
 		else if(strcmp(CMD_VELOCIDADE, msg) == 0){
 			bzero(msg, MSG_SIZE);
-			snprintf(msg, MSG_SIZE, "%lf", fVelocidade((double)(time(NULL)-beginning)));
+			snprintf(msg, MSG_SIZE, "%lf\n", fVelocidade((double)(time(NULL)-beginning)));
 		}
 		else if(strcmp(CMD_ORIENTACAO, msg) == 0){
 			bzero(msg, MSG_SIZE);
 			double x, y, z;
-			snprintf(msg, MSG_SIZE, "%lf", fOrientacao(&x, &y, &z, (double)(time(NULL)-beginning)));
+			fOrientacao(&x, &y, &z, (double)(time(NULL)-beginning));
+			snprintf(msg, MSG_SIZE, "X = %lf Y = %lf Z = %lf\n", x, y, z);
 		}
 		else if(strcmp(CMD_TEMPO_VOO, msg) == 0){
 			bzero(msg, MSG_SIZE);
-			tempoVoo = (time(NULL) - beginning)/60;
-			snprintf(msg, MSG_SIZE, "%ld minutes", tempoVoo);
+                        tempoVoo = (time(NULL) - beginning)/60;
+			snprintf(msg, MSG_SIZE, "%ld minutos", tempoVoo);
 		}
 		else if(strcmp(CMD_PESO, msg) == 0){
-
+			bzero(msg, MSG_SIZE);
+			snprintf(msg, MSG_SIZE, "%lf\n", fPeso((double)(time(NULL)-beginning)));
 		}
 		else{
 			bzero(msg, MSG_SIZE);
-			snprintf(msg, MSG_SIZE, "invalid command");
+			snprintf(msg, MSG_SIZE, "Comando invalido");
 		}
 
 		//enviar a resposta
@@ -132,6 +134,15 @@ double fVelocidade(double f){
 	return 400+5*sin(f)+(rand()%6)-3;
 }
 
-double fOrientacao(double *x, double *y, double *z, double f){
-	
+void fOrientacao(double *x, double *y, double *z, double f){
+	*x = 5*cos(f/10000);
+	*y = -5*sin(f/10000);
+	if(f < 28800) *z = 1;
+	else if(f < 57600) *z = 0;
+	else *z = (f < 97400 ? -1 : 0);
 }
+
+double fPeso(double f){
+	return (20000 - (f/7200)*0.32);
+}
+

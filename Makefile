@@ -1,5 +1,5 @@
 all:
-	gcc server.c -o server -O3
+	gcc server.c -o server -O3 -lm
 	gcc client.c -o client -O3 -lm
 
 run1:
@@ -9,6 +9,6 @@ run2:
 	./client gm-VirtualBox 7600
 
 debug:
-	gcc server.c -o server -g -Wall -Wextra
+	gcc server.c -o server -g -Wall -Wextra -lm
 	gcc client.c -o client -g -Wall -Wextra -lm
 
